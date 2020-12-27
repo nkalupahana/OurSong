@@ -1,4 +1,4 @@
-Do No Harm License (modified)
+Do No Harm License
 
 **Preamble**
 
