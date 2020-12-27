@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
+    <meta charset="UTF-8">
+    <title>OurSong</title>
+</head>
+
+<body>
+    <div class="container-fluid" id="app">
+        <div class="row">
+            <nav id="sidebarMenu" class="bg-light navbar-light sidebar"
+                style="width: 200px; height: 100vh; position:fixed;">
+                <div class="position-sticky pt-3">
+                    <h1 class="h1" style="padding-left: 10px;">OurSong</h1>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="#">
+                                Setup
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a v-bind:class="{ disabled: state < 1 }" class="nav-link" href="#">
+                                Add Videos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a v-bind:class="{ disabled: state < 2 }" class="nav-link" href="#">
+                                Add Master Audio
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a v-bind:class="{ disabled: state < 3 }" class="nav-link" href="#">
+                                Synchronize Videos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a v-bind:class="{ disabled: state < 4 }" class="nav-link" href="#">
+                                Create Video Segments
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a v-bind:class="{ disabled: state < 5 }" class="nav-link" href="#">
+                                Customize
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a v-bind:class="{ disabled: state < 6 }" class="nav-link" href="#">
+                                Export
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <main style="position: relative; left: 210px; width: calc(100vw - 210px); overflow: scroll;">
+                <br>
+                <!-- Setup Page-->
+                <div v-if="state == 0">
+                    <center>
+                        <h1 class="h2" v-if="videos.length == 0">Welcome to OurSong!</h1>
+                        <br>
+                        <button class="btn btn-primary" type="button" onclick="clearInput('projectName')" data-bs-toggle="modal" data-bs-target="#createModal" id="createProjectModal">Create New Project</button>
+                        <button class="btn btn-primary" type="button" onclick="openExistingProject()">Open Existing Project</button>
+                        <br><br>
+                    </center>
+                </div>
+                <!-- Add Videos Page -->
+                <div v-else-if="state == 1">
+                    <center>
+                        <h1 class="h2" v-if="videos.length == 0">Let's get started.</h1>
+                        <h1 class="h2" v-if="videos.length != 0">Add and tag your videos below.</h1>
+                        <br>
+                    </center>
+                    <div class="accordion" id="fileAccordian">
+                        <div v-for="(video,i) in videos" class="accordion-item">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    :data-bs-target="'#collapseOne' + i">
+                                    {{ video.name || video.path + " (click to tag)" }}
+                                </button>
+                            </h2>
+                            <div :id="'collapseOne' + i" class="accordion-collapse collapse" aria-labelledby="headingOne"
+                                data-bs-parent="#fileAccordian">
+                                <div class="accordion-body">
+                                    Video path: {{ video.path }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br v-if="videos.length != 0">
+                    <center>
+                        <button type="button" class="btn btn-primary" onclick="videoInput()">Add Videos</button>
+                        <br><br>
+                        <button type="button" class="btn btn-success">All done!</button>
+                    </center>
+                    <input id="videoInput" type="file" multiple="multiple" style="display:none" onchange="ingestVideoInput(event)">
+                    <br><br>
+                </div>
+                <div v-else>
+                    <p>other state</p>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalTitle" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="v">Let's get started!</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>What do you want to call this project? (Generally, the name of your song works.)</p>
+                    <input type="text" class="form-control" id="projectName">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="createProject()">Select Location & Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/jashkenas/underscore@1.12.0/underscore-min.js"></script>
+    <script src="./renderer.js"></script>
+    <script src="./states/0.js"></script>
+    <script src="./states/1.js"></script>
+</body>
+
+</html>

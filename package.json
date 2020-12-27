@@ -1,0 +1,28 @@
+{
+  "name": "OurSong",
+  "version": "0.0.1",
+  "description": "An A Cappella song video assembly program",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": "https://github.com/electron/electron-quick-start",
+  "keywords": [
+    "video",
+    "a cappella",
+    "electron",
+    "audio",
+    "editing"
+  ],
+  "author": "Nisala Kalupahana",
+  "license": "Do No Harm",
+  "devDependencies": {
+    "electron": "^11.1.0"
+  },
+  "dependencies": {
+    "crypto-js": "^4.0.0",
+    "ffmpeg-static": "^4.2.7",
+    "ffprobe": "^1.1.2",
+    "ffprobe-static": "^3.0.0"
+  }
+}
