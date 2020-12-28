@@ -10,6 +10,11 @@ window.addEventListener('DOMContentLoaded', () => {
             state: 0,
             videos: []
         },
+        methods: {
+            thumbnail: (video) => {
+                return path.join(packageLocation, "thumbnails", `${video.hash}-${Math.floor(video.frames / 2)}.png`);
+            }
+        },
         updated() {
             debouncedAutoSave();
         }
