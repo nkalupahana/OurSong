@@ -1,5 +1,3 @@
-const { dialog } = require('electron').remote;
-
 function clearInput(id) {
     document.getElementById(id).value = "";
 }

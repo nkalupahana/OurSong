@@ -137,7 +137,15 @@
                     <center>
                         <h1 class="h2">Add your master audio file.</h1>
                         <p>This is what you'll sync all of your videos to, so make sure it's properly edited and trimmed.</p>
-                        <button class="btn btn-primary" type="button" onclick="openExistingProject()">Add File</button>
+                        <div v-if="audio">
+                            <audio  controls>
+                                <source :src="audio">
+                            </audio>
+                            <br><br>
+                        </div>
+                        <button class="btn btn-primary" type="button" onclick="ingestAudioInput()">{{audio ? "Change File" : "Add File"}}</button>
+                        <br><br>
+                        <button onclick="nextState()" v-if="audio" type="button" class="btn btn-success">Next Step!</button>
                         <br><br>
                     </center>
                 </div>

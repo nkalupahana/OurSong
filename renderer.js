@@ -2,6 +2,7 @@ let app;
 let packageLocation = "";
 const path = require('path');
 const fs = require("fs");
+const { dialog } = require('electron').remote;
 
 window.addEventListener('DOMContentLoaded', () => {
     app = new Vue({
@@ -10,6 +11,7 @@ window.addEventListener('DOMContentLoaded', () => {
             // TO SAVE
             state: 0,
             videos: [],
+            audio: "",
             // TEMP
             processing: []
         },
@@ -46,7 +48,7 @@ function autosave() {
     }
 
     fs.writeFileSync(path.join(packageLocation, "state.json"), 
-        JSON.stringify({"state": app.state, "videos": app.videos}));
+        JSON.stringify({"state": app.state, "audio": app.audio, "videos": app.videos}));
 }
 
 const debouncedAutoSave = _.debounce(autosave, 1000);
