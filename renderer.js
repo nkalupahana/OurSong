@@ -13,7 +13,9 @@ window.addEventListener('DOMContentLoaded', () => {
             videos: [],
             audio: "",
             // TEMP
-            processing: []
+            processing: [],
+            // GENERAL
+            states: ["Setup", "Add Videos", "Add Master Audio", "Synchronize Videos", "Create Video Segments", "Customize", "Export"]
         },
         computed: {
             stepOneComplete: () => {
@@ -55,4 +57,8 @@ const debouncedAutoSave = _.debounce(autosave, 1000);
 
 function nextState() {
     app.state += 1;
+}
+
+function setState(state) {
+    app.state = state;
 }
