@@ -114,7 +114,7 @@
                                                 <option value="other">Other</option>
                                             </select>
                                             <br><br>
-                                            <button type="button" class="btn btn-danger">Remove Video</button>
+                                            <button :onclick="'deleteVideo(' + i + ')'" type="button" class="btn btn-danger">Remove Video</button>
                                         </div>
                                     </div>
                                 </div>
@@ -123,12 +123,23 @@
                     </div>
                     <br v-if="videos.length != 0">
                     <center>
+                        <p v-if="processing.length != 0">Processing: {{ processing.join(", ") }}</p>
+                        <br v-if="processing.length != 0">
                         <button type="button" class="btn btn-primary" onclick="videoInput()">Add Videos</button>
                         <br><br>
-                        <button type="button" class="btn btn-success">All done!</button>
+                        <button onclick="nextState()" v-if="videos.length != 0" :class="{ disabled: !stepOneComplete, 'btn-secondary': !stepOneComplete, 'btn-success': stepOneComplete }" type="button" class="btn">{{ stepOneComplete ? "Next Step!" : "Fix Warnings To Continue" }}</button>
                     </center>
                     <input id="videoInput" type="file" multiple="multiple" style="display:none" onchange="ingestVideoInput(event)">
                     <br><br>
+                </div>
+                <!-- Add Master Audio Page -->
+                <div v-else-if="state == 2">
+                    <center>
+                        <h1 class="h2">Add your master audio file.</h1>
+                        <p>This is what you'll sync all of your videos to, so make sure it's properly edited and trimmed.</p>
+                        <button class="btn btn-primary" type="button" onclick="openExistingProject()">Add File</button>
+                        <br><br>
+                    </center>
                 </div>
                 <div v-else>
                     <p>other state</p>
@@ -137,6 +148,7 @@
         </div>
     </div>
 
+    <!-- MODALS -->
     <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalTitle" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -145,7 +157,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>What do you want to call this project? (Generally, the name of your song works.)</p>
+                    <p>What do you want to call this project? (Generally, this should be the name of your song.)</p>
                     <input type="text" class="form-control" id="projectName">
                 </div>
                 <div class="modal-footer">
@@ -162,9 +174,11 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/jashkenas/underscore@1.12.0/underscore-min.js"></script>
+
     <script src="./renderer.js"></script>
     <script src="./states/0.js"></script>
     <script src="./states/1.js"></script>
+    <script src="./states/2.js"></script>
 </body>
 
 </html>

@@ -10,6 +10,12 @@ function videoInput() {
     document.getElementById('videoInput').click();
 }
 
+function deleteVideo(index) {
+    if (confirm("Are you sure you want to delete this video?")) {
+        app.videos.splice(index, 1);
+    }
+}
+
 function ingestVideoInput(event) {
     for (let file of event.target.files) {
         if (!file.type.match('video')) {
@@ -21,6 +27,8 @@ function ingestVideoInput(event) {
             notyf.error("Duplicate video skipped.");
             continue;
         }
+
+        app.processing.push(file.path);
 
         const thumbnailPath = path.join(packageLocation, "thumbnails");
         if (!fs.existsSync(thumbnailPath)) {
@@ -43,6 +51,13 @@ function ingestVideoInput(event) {
 
             exec(makeThumbnail, err => {
                 console.log(err);
+                if (_.where(app.videos, {path: file.path}).length != 0) {
+                    const notyf = new Notyf({duration: 4000});
+                    notyf.error("Duplicate video skipped.");
+                    return;
+                }
+
+                app.processing = _.without(app.processing, file.path);
                 app.videos.push(videoData);
             });
         });
