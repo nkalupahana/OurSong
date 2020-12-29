@@ -107,16 +107,29 @@
                     <center>
                         <h1 class="h2">Add your master audio file.</h1>
                         <p>This is what you'll sync all of your videos to, so make sure it's properly edited and trimmed.</p>
-                        <div v-if="audio">
+                        <div v-if="audio.path">
                             <audio  controls>
-                                <source :src="audio">
+                                <source :src="audio.path">
                             </audio>
                             <br><br>
                         </div>
-                        <button class="btn btn-primary" type="button" onclick="ingestAudioInput()">{{audio ? "Change File" : "Add File"}}</button>
+                        <button class="btn btn-primary" type="button" onclick="ingestAudioInput()">{{audio.path ? "Change File" : "Add File"}}</button>
                         <br><br>
-                        <button onclick="nextState()" v-if="audio" type="button" class="btn btn-success">Next Step!</button>
+                        <button onclick="nextState()" v-if="audio.path" type="button" class="btn btn-success">Next Step!</button>
                         <br><br>
+                    </center>
+                </div>
+                <!-- Synchronize Page -->
+                <div v-else-if="state == 3">
+                    <center>
+                        <h1 class="h2">Time to synchronize clips!</h1>
+                        <p>Drag the top timeline so when you press play, the top and bottom clip play synchronized. The bottom track is also draggable, in case the person on the top track doesn't come in until later (moves both tracks together).</p>
+                        <br><br>
+                        <p>{{ videos[currentVideo].name}} </p>
+                        <waveform :vid="currentVideo"></waveform>
+                        <br>
+                        <waveform :vid="-1"></waveform>
+                        <p>Master Audio Track</p>
                     </center>
                 </div>
                 <div v-else>
@@ -157,6 +170,9 @@
     <script src="./states/0.js"></script>
     <script src="./states/1.js"></script>
     <script src="./states/2.js"></script>
+    <script src="./states/3.js"></script>
+
+    <script src="./components/waveform.js"></script>
 </body>
 
 </html>

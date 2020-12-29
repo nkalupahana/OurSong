@@ -23,6 +23,7 @@
     "crypto-js": "^4.0.0",
     "ffmpeg-static": "^4.2.7",
     "ffprobe": "^1.1.2",
-    "ffprobe-static": "^3.0.0"
+    "ffprobe-static": "^3.0.0",
+    "waveform-data": "^3.3.4"
   }
 }

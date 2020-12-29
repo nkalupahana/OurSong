@@ -3,6 +3,7 @@ let packageLocation = "";
 const path = require('path');
 const fs = require("fs");
 const { dialog } = require('electron').remote;
+const WaveformData = require('waveform-data');
 
 window.addEventListener('DOMContentLoaded', () => {
     app = new Vue({
@@ -11,11 +12,12 @@ window.addEventListener('DOMContentLoaded', () => {
             // TO SAVE
             state: 0,
             videos: [],
-            audio: "",
+            audio: {},
             // TEMP
             processing: [],
+            currentVideo: 0,
             // GENERAL
-            states: ["Setup", "Add Videos", "Add Master Audio", "Synchronize Videos", "Create Video Segments", "Customize", "Export"]
+            states: ["Setup", "Add Videos", "Add Master Audio", "Synchronize Videos", "Create Video Segments", "Window Faces", "Customize", "Export"]
         },
         computed: {
             stepOneComplete: () => {
@@ -30,7 +32,7 @@ window.addEventListener('DOMContentLoaded', () => {
         },
         methods: {
             thumbnail: video => {
-                return path.join(packageLocation, "thumbnails", `${video.hash}-${Math.floor(video.frames / 2)}.png`);
+                return path.join(packageLocation, "thumbnails", `${video.hash}-${Math.floor(video.duration / 2)}.png`);
             }
         },
         updated() {
@@ -53,7 +55,7 @@ function autosave() {
         JSON.stringify({"state": app.state, "audio": app.audio, "videos": app.videos}));
 }
 
-const debouncedAutoSave = _.debounce(autosave, 1000);
+const debouncedAutoSave = _.debounce(autosave, 2000);
 
 function nextState() {
     app.state += 1;
