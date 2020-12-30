@@ -49,8 +49,8 @@ function draw(canvas, ctx, waveform) {
     ctx.fill();
 }
 
-function calculateTime(canvas, secondsPerPixel) {
-    console.log((-canvas.getContext("2d").getTransform().e) * secondsPerPixel * PIXEL_DIVISOR);
+function calculateWaveformTime(canvas, secondsPerPixel) {
+    return (-canvas.getContext("2d").getTransform().e) * secondsPerPixel * PIXEL_DIVISOR;
 }
 
 function renderWaveform(obj) {
@@ -60,6 +60,10 @@ function renderWaveform(obj) {
 
     let drag = {drag: false, startX: 0};
     canvas.addEventListener("mousedown", event => {
+        if (!document.getElementById("mainAudioPlay").paused) {
+            playSyncedTracks();
+        }
+
         drag.drag = true;
         drag.startX = event.clientX;
     });
@@ -77,17 +81,23 @@ function renderWaveform(obj) {
 
     canvas.addEventListener("mouseup", event => {
         drag.drag = false;
+        syncWithVue();
+        debouncedAutoSave();
     });
 
     canvas.width = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
 
-    transform(canvas, ctx, 0, waveform);
+    if (obj.vid == -1) {
+        transform(canvas, ctx, (app.videos[app.currentVideo].sync.mainTransform || 0), waveform);
+    } else {
+        transform(canvas, ctx, (app.videos[app.currentVideo].sync.childTransform || 0), waveform);
+    }
 }
 
 Vue.component('waveform', {
-    props: ["vid"],
-    template: `<canvas ref="canvas" :id="'waveform' + vid" style="height: 125px; width: 80%;"></canvas>`,
+    props: ["vid", "update"],
+    template: `<canvas ref="canvas" :class="'waveform'+vid+update" :id="'waveform' + vid" style="height: 125px; width: 80%;"></canvas>`,
     mounted () {
         renderWaveform(this);
     },

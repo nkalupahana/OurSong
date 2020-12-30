@@ -6,6 +6,7 @@
         integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous" />
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
+    <link rel="stylesheet" href="style.css">
     <meta charset="UTF-8">
     <title>OurSong</title>
 </head>
@@ -124,12 +125,48 @@
                     <center>
                         <h1 class="h2">Time to synchronize clips!</h1>
                         <p>Drag the top timeline so when you press play, the top and bottom clip play synchronized. The bottom track is also draggable, in case the person on the top track doesn't come in until later (moves both tracks together).</p>
-                        <br><br>
-                        <p>{{ videos[currentVideo].name}} </p>
-                        <waveform :vid="currentVideo"></waveform>
+                        <p style="margin-bottom: 4px;">{{ videos[currentVideo].name}} </p>
+                        <div>
+                            <svg style="padding-bottom: 8px;" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-volume-up-fill" viewBox="0 0 16 16">
+                                <path d="M11.536 14.01A8.473 8.473 0 0 0 14.026 8a8.473 8.473 0 0 0-2.49-6.01l-.708.707A7.476 7.476 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303l.708.707z"/>
+                                <path d="M10.121 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.904-4.596l-.707.707A5.483 5.483 0 0 1 11.025 8a5.483 5.483 0 0 1-1.61 3.89l.706.706z"/>
+                                <path d="M8.707 11.182A4.486 4.486 0 0 0 10.025 8a4.486 4.486 0 0 0-1.318-3.182L8 5.525A3.489 3.489 0 0 1 9.025 8 3.49 3.49 0 0 1 8 10.475l.707.707zM6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06z"/>
+                            </svg>
+                            <input type="range" min="0" max="100" value="100" oninput="adjustVolume(this, 'userAudioPlay')">
+                        </div>
+                        <div :class="{ noClick: videos[currentVideo].sync.lock }" >
+                            <waveform :vid="currentVideo" :update="-1"></waveform>
+                            <br>
+                            <waveform :vid="-1" :update="currentVideo"></waveform>
+                        </div>
+                        <p style="margin-bottom: 4px;">Master Audio Track</p>
+                        <div>
+                            <svg style="padding-bottom: 8px;" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-volume-up-fill" viewBox="0 0 16 16">
+                                <path d="M11.536 14.01A8.473 8.473 0 0 0 14.026 8a8.473 8.473 0 0 0-2.49-6.01l-.708.707A7.476 7.476 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303l.708.707z"/>
+                                <path d="M10.121 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.904-4.596l-.707.707A5.483 5.483 0 0 1 11.025 8a5.483 5.483 0 0 1-1.61 3.89l.706.706z"/>
+                                <path d="M8.707 11.182A4.486 4.486 0 0 0 10.025 8a4.486 4.486 0 0 0-1.318-3.182L8 5.525A3.489 3.489 0 0 1 9.025 8 3.49 3.49 0 0 1 8 10.475l.707.707zM6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06z"/>
+                            </svg>
+                            <input type="range" min="0" max="100" value="100" oninput="adjustVolume(this, 'mainAudioPlay')">
+                        </div>
                         <br>
-                        <waveform :vid="-1"></waveform>
-                        <p>Master Audio Track</p>
+                        <button type="button" onclick="playSyncedTracks()" class="btn btn-primary">Play From Start / Stop</button>
+                        <br><br>
+                        <button onclick="prevUser()" type="button" class="btn btn-primary">
+                            <svg style="padding-bottom: 3px; padding-right: 2px;" xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                            </svg>
+                        </button>
+                        <button onclick="toggleLock()" :class="{ 'btn-success': !videos[currentVideo].sync.lock, 'btn-danger': videos[currentVideo].sync.lock }" type="button" class="btn">{{ videos[currentVideo].sync.lock ? "Unlock Tracks" : "Lock Sync" }}</button>
+                        <button onclick="nextUser()" type="button" class="btn btn-primary">
+                            <svg style="padding-bottom: 3px; padding-left: 2px;" xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                            </svg>
+                        </button>
+                        <audio id="mainAudioPlay" style="display:none" :src="audio.path"></audio>
+                        <audio id="userAudioPlay" style="display:none" :src="videos[currentVideo].path"></audio>
+                        <br><br>
+                        <button onclick="nextState()" :class="{ disabled: !stepThreeComplete, 'btn-secondary': !stepThreeComplete, 'btn-success': stepThreeComplete }" type="button" class="btn">{{ stepThreeComplete ? "Next Step!" : "Lock All Tracks to Continue" }}</button>
+                        <br><br>
                     </center>
                 </div>
                 <div v-else>

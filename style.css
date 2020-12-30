@@ -1,0 +1,4 @@
+.noClick {
+    pointer-events: none;
+    filter: blur(3px);
+}

@@ -28,11 +28,27 @@ window.addEventListener('DOMContentLoaded', () => {
                 }
 
                 return true;
+            },
+            stepThreeComplete: () => {
+                for (let video of app.videos) {
+                    if (!video.sync.lock) {
+                        return false;
+                    }
+                }
+                
+                return true;
             }
         },
         methods: {
             thumbnail: video => {
                 return path.join(packageLocation, "thumbnails", `${video.hash}-${Math.floor(video.duration / 2)}.png`);
+            }
+        },
+        watch: {
+            state: () => {
+                // Clear variables marked TEMP
+                app.currentVideo = 0;
+                app.processing = [];
             }
         },
         updated() {
