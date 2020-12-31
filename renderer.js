@@ -13,6 +13,8 @@ window.addEventListener('DOMContentLoaded', () => {
             state: 0,
             videos: [],
             audio: {},
+            sectionPoints: [],
+            layouts: {},
             // TEMP
             processing: [],
             currentVideo: 0,
@@ -29,6 +31,19 @@ window.addEventListener('DOMContentLoaded', () => {
 
                 return true;
             },
+            accSections: () => {
+                let ret = [];
+                for (let i = 0; i < app.sectionPoints.length - 1; ++i) {
+                    ret.push(`${app.sectionPoints[i]} - ${app.sectionPoints[i + 1]}`);
+                }
+
+                return ret;
+            }
+        },
+        methods: {
+            thumbnail: video => {
+                return path.join(packageLocation, "thumbnails", `${video.hash}-${Math.floor(video.duration / 2)}.png`);
+            },
             stepThreeComplete: () => {
                 for (let video of app.videos) {
                     if (!video.sync.lock) {
@@ -39,14 +54,9 @@ window.addEventListener('DOMContentLoaded', () => {
                 return true;
             }
         },
-        methods: {
-            thumbnail: video => {
-                return path.join(packageLocation, "thumbnails", `${video.hash}-${Math.floor(video.duration / 2)}.png`);
-            }
-        },
         watch: {
             state: () => {
-                // Clear variables marked TEMP
+                // Clear variables marked TEMP in app data
                 app.currentVideo = 0;
                 app.processing = [];
             }
@@ -68,7 +78,8 @@ function autosave() {
     }
 
     fs.writeFileSync(path.join(packageLocation, "state.json"), 
-        JSON.stringify({"state": app.state, "audio": app.audio, "videos": app.videos}));
+        JSON.stringify({"state": app.state, "audio": app.audio, 
+            "videos": app.videos, "sectionPoints": app.sectionPoints, "layouts": app.layouts}));
 }
 
 const debouncedAutoSave = _.debounce(autosave, 2000);

@@ -66,8 +66,7 @@
                                     {{ video.name || video.path }}
                                 </button>
                             </h2>
-                            <div :id="'collapseOne' + i" class="accordion-collapse collapse" aria-labelledby="headingOne"
-                                data-bs-parent="#fileAccordian">
+                            <div :id="'collapseOne' + i" class="accordion-collapse collapse" data-bs-parent="#fileAccordian">
                                 <div class="accordion-body">
                                     <div class="row">
                                         <div class="col-lg-6">
@@ -165,9 +164,35 @@
                         <audio id="mainAudioPlay" style="display:none" :src="audio.path"></audio>
                         <audio id="userAudioPlay" style="display:none" :src="videos[currentVideo].path"></audio>
                         <br><br>
-                        <button onclick="nextState()" :class="{ disabled: !stepThreeComplete, 'btn-secondary': !stepThreeComplete, 'btn-success': stepThreeComplete }" type="button" class="btn">{{ stepThreeComplete ? "Next Step!" : "Lock All Tracks to Continue" }}</button>
+                        <button onclick="nextState()" :class="{ disabled: !stepThreeComplete(), 'btn-secondary': !stepThreeComplete(), 'btn-success': stepThreeComplete() }" type="button" class="btn">{{ stepThreeComplete() ? "Next Step!" : "Lock All Tracks to Continue" }}</button>
                         <br><br>
                     </center>
+                </div>
+                <div v-else-if="state == 4">
+                    <center>
+                        <h1 class="h2">Create your video's sections.</h1>
+                        <p>Add points on the timeline to section your video out, and then assign video layouts to each timeline section.</p>
+                        <peaks-waveform style="width: 80%;"></peaks-waveform>
+                        <br>
+                        <button onclick="addDividerAtPlayhead()" type="button" class="btn btn-primary">Add Divider at Playhead</button>
+                        <button onclick="deleteDividerAtPlayhead()" type="button" class="btn btn-danger">Delete Divider at Playhead</button>
+                        <br><br>
+                    </center>
+                    <div class="accordion" id="sectionAccordian">
+                        <div v-for="(section,i) in accSections" class="accordion-item">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    :data-bs-target="'#collapseTwo' + i">
+                                    {{ section }}
+                                </button>
+                            </h2>
+                            <div :id="'collapseTwo' + i" class="accordion-collapse collapse" data-bs-parent="#sectionAccordian">
+                                <div class="accordion-body">
+                                    <button :onclick="'playSection(\'' + section + '\')'" type="button" class="btn btn-primary">Play Section</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div v-else>
                     <p>other state</p>
@@ -208,8 +233,10 @@
     <script src="./states/1.js"></script>
     <script src="./states/2.js"></script>
     <script src="./states/3.js"></script>
+    <script src="./states/4.js"></script>
 
     <script src="./components/waveform.js"></script>
+    <script src="./components/peaks-waveform.js"></script>
 </body>
 
 </html>
