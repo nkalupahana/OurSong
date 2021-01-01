@@ -195,7 +195,9 @@
                             </div>
                         </div>
                     </div>
-                    <br><br><br>
+                    <br>
+                    <center><button onclick="nextState()" :class="{ disabled: !stepFourComplete, 'btn-secondary': !stepFourComplete, 'btn-success': stepFourComplete }" type="button" class="btn">{{ stepThreeComplete ? "Next Step!" : "Layout All to Continue" }}</button></center>
+                    <br><br>
                 </div>
                 <div v-else>
                     <p>other state</p>

@@ -41,6 +41,15 @@ window.addEventListener('DOMContentLoaded', () => {
                 }
 
                 return ret;
+            },
+            stepFourComplete: () => {
+                for (let section of app.accSections) {
+                    if (app.layouts[section] == undefined) {
+                        return false;
+                    }
+                }
+
+                return true;
             }
         },
         methods: {
