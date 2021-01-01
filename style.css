@@ -2,3 +2,7 @@
     pointer-events: none;
     filter: blur(3px);
 }
+
+.blueBorder {
+    border: 2px blue solid;
+}

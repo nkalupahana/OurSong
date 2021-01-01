@@ -1,0 +1,28 @@
+<html>
+<body>
+
+<script>
+let layout = [ '0 0 0.5 0.5',
+     '0 0.5 0.5 0.5',
+     '0.5 0 0.5 0.5',
+     '0.5 0.5 0.5 0.5' ];
+    
+const canvas = document.querySelector("canvas");
+const ctx = canvas.getContext("2d");
+ctx.fillStyle = 'grey';
+for (let lay of layout) {
+    lay = lay.split(" ");
+    ctx.fillRect(canvas.width * lay[0],canvas.height * lay[1],canvas.width * lay[2],canvas.height * lay[3]);
+
+    ctx.beginPath();
+    ctx.strokeStyle = 'black';
+    ctx.moveTo(canvas.width * lay[0],canvas.height * lay[1]);
+    ctx.lineTo(canvas.width * lay[0] + canvas.width * lay[2], canvas.height * lay[1]);
+    ctx.lineTo(canvas.width * lay[0] + canvas.width * lay[2], canvas.height * lay[1] + canvas.height * lay[3]);
+    ctx.lineTo(canvas.width * lay[0], canvas.height * lay[1] + canvas.height * lay[3]);
+    ctx.stroke();
+}
+
+</script>
+</body>
+</html>

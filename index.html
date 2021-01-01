@@ -189,10 +189,13 @@
                             <div :id="'collapseTwo' + i" class="accordion-collapse collapse" data-bs-parent="#sectionAccordian">
                                 <div class="accordion-body">
                                     <button :onclick="'playSection(\'' + section + '\')'" type="button" class="btn btn-primary">Play Section</button>
+                                    <br><br>
+                                    <layout-picker :layouts="layouts" :timerange="section"></layout-picker>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <br><br><br>
                 </div>
                 <div v-else>
                     <p>other state</p>
@@ -237,6 +240,8 @@
 
     <script src="./components/waveform.js"></script>
     <script src="./components/peaks-waveform.js"></script>
+    <script src="./components/layout-picker.js"></script>
+    <script src="./components/layout.js"></script>
 </body>
 
 </html>

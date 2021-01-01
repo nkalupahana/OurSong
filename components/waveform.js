@@ -104,4 +104,4 @@ Vue.component('waveform', {
     updated() {
         renderWaveform(this);
     }
-})
+});

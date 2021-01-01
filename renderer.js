@@ -4,8 +4,10 @@ const path = require('path');
 const fs = require("fs");
 const { dialog } = require('electron').remote;
 const WaveformData = require('waveform-data');
+const yaml = require('js-yaml');
 
 window.addEventListener('DOMContentLoaded', () => {
+    const layouts = yaml.load(fs.readFileSync('./layouts.yaml', 'utf8'));
     app = new Vue({
         el: '#app',
         data: {
@@ -18,8 +20,9 @@ window.addEventListener('DOMContentLoaded', () => {
             // TEMP
             processing: [],
             currentVideo: 0,
-            // GENERAL
-            states: ["Setup", "Add Videos", "Add Master Audio", "Synchronize Videos", "Create Video Segments", "Window Faces", "Customize", "Export"]
+            // CONST
+            states: ["Setup", "Add Videos", "Add Master Audio", "Synchronize Videos", "Create Video Segments", "Window Faces", "Customize", "Export"],
+            constLayouts: layouts
         },
         computed: {
             stepOneComplete: () => {
