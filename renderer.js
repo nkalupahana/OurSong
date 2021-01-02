@@ -22,7 +22,11 @@ window.addEventListener('DOMContentLoaded', () => {
             currentVideo: 0,
             // CONST
             states: ["Setup", "Add Videos", "Add Master Audio", "Synchronize Videos", "Create Video Segments", "Window Faces", "Customize", "Export"],
-            constLayouts: layouts
+            constLayouts: layouts,
+            resolution: {
+                height: 1920,
+                width: 1080
+            }
         },
         computed: {
             stepOneComplete: () => {
@@ -91,7 +95,7 @@ function autosave() {
 
     fs.writeFileSync(path.join(packageLocation, "state.json"), 
         JSON.stringify({"state": app.state, "audio": app.audio, 
-            "videos": app.videos, "sectionPoints": app.sectionPoints, "layouts": app.layouts}));
+            "videos": app.videos, "sectionPoints": app.sectionPoints, "layouts": app.layouts, "resolution": app.resolution}));
 }
 
 const debouncedAutoSave = _.debounce(autosave, 2000);
@@ -101,5 +105,9 @@ function nextState() {
 }
 
 function setState(state) {
-    app.state = state;
+    if (state == 0) {
+        window.location.reload();
+    } else {
+        app.state = state;
+    }
 }

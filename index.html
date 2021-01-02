@@ -199,6 +199,10 @@
                     <center><button onclick="nextState()" :class="{ disabled: !stepFourComplete, 'btn-secondary': !stepFourComplete, 'btn-success': stepFourComplete }" type="button" class="btn">{{ stepThreeComplete ? "Next Step!" : "Layout All to Continue" }}</button></center>
                     <br><br>
                 </div>
+                <div v-else-if="state == 5">
+                    <p>WINDOWING</p>
+                    <facewindow :vid="currentVideo"></facewindow>
+                </div>
                 <div v-else>
                     <p>other state</p>
                 </div>
@@ -244,6 +248,7 @@
     <script src="./components/peaks-waveform.js"></script>
     <script src="./components/layout-picker.js"></script>
     <script src="./components/layout.js"></script>
+    <script src="./components/facewindow.js"></script>
 </body>
 
 </html>
