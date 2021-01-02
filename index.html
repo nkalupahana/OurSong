@@ -200,8 +200,11 @@
                     <br><br>
                 </div>
                 <div v-else-if="state == 5">
-                    <p>WINDOWING</p>
-                    <facewindow :vid="currentVideo"></facewindow>
+                    <center>
+                        <h1 class="h2">Time to window faces!</h1>
+                        <p>Every layout you selected in the last step has different video window sizes. Move and resize these windows to what you'd like them to look like in the final video.</p>
+                        <facewindow :ratio="currentRatio" :vid="currentVideo"></facewindow>
+                    </center>
                 </div>
                 <div v-else>
                     <p>other state</p>

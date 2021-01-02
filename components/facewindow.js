@@ -18,8 +18,9 @@ function prepareStage(obj, divisor) {
 
     const widthLimit = obj.stage.width();
     const heightLimit = obj.stage.height();
+    const ratio = app.windowRatios()[obj.ratio];
 
-    let width = app.resolution.width;
+    let width = app.resolution.width * ratio;
     let height = app.resolution.height;
 
     while (((width / divisor) > widthLimit) || ((height / divisor) > heightLimit)) {
@@ -42,8 +43,8 @@ function prepareStage(obj, divisor) {
             let y = pos.y;
             if (x < 0) x = 0;
             if (y < 0) y = 0;
-            if (x > (widthLimit - frame.attrs.width)) x = (widthLimit - frame.attrs.width);
-            if (y > (heightLimit - frame.attrs.height)) y = (heightLimit - frame.attrs.height);
+            if (x > (widthLimit - (frame.attrs.width * frame.attrs.scaleX))) x = (widthLimit - (frame.attrs.width * frame.attrs.scaleX));
+            if (y > (heightLimit - (frame.attrs.height * frame.attrs.scaleY))) y = (heightLimit - (frame.attrs.height * frame.attrs.scaleY));
 
             return {x,y};
         }
@@ -61,6 +62,7 @@ function prepareStage(obj, divisor) {
         nodes: [frame],
         boundBoxFunc: (oldBox, newBox) => {
             if (newBox.height > heightLimit) return oldBox;
+            if (newBox.width > widthLimit) return oldBox;
             return newBox;
         }
     });
@@ -86,8 +88,8 @@ function addImage(obj, divisor) {
 }
 
 Vue.component('facewindow', {
-    props: ["vid"],
-    template: `<div ref="container"></div>`,
+    props: ["vid", "ratio"],
+    template: `<div :ratio="ratio" :vid="vid" ref="container"></div>`,
     mounted () {
         const divisor = getDivisor(this);
         this.stage = new Konva.Stage({
@@ -101,6 +103,7 @@ Vue.component('facewindow', {
     updated() {
         const divisor = getDivisor(this);
         this.stage.clear();
+        addImage(this, divisor);
         prepareStage(this, divisor);
     }
 });

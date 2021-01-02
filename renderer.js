@@ -17,16 +17,17 @@ window.addEventListener('DOMContentLoaded', () => {
             audio: {},
             sectionPoints: [],
             layouts: {},
-            // TEMP
-            processing: [],
-            currentVideo: 0,
-            // CONST
-            states: ["Setup", "Add Videos", "Add Master Audio", "Synchronize Videos", "Create Video Segments", "Window Faces", "Customize", "Export"],
-            constLayouts: layouts,
             resolution: {
                 height: 1920,
                 width: 1080
-            }
+            },
+            // TEMP (NOTE: update in watch when added/remove)
+            processing: [],
+            currentVideo: 0,
+            currentRatio: 0,
+            // CONST
+            states: ["Setup", "Add Videos", "Add Master Audio", "Synchronize Videos", "Create Video Segments", "Window Faces", "Customize", "Export"],
+            constLayouts: layouts
         },
         computed: {
             stepOneComplete: () => {
@@ -68,6 +69,17 @@ window.addEventListener('DOMContentLoaded', () => {
                 }
                 
                 return true;
+            },
+            windowRatios: () => {
+                let ret = [];
+                for (let key in app.layouts) {
+                    for (let lstr of app.constLayouts[app.layouts[key]]) {
+                        lstr = lstr.split(" ");
+                        ret.push(Number(lstr[2]) / Number(lstr[3]));
+                    }
+                }
+
+                return _.uniq(ret);
             }
         },
         watch: {
@@ -75,6 +87,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 // Clear variables marked TEMP in app data
                 app.currentVideo = 0;
                 app.processing = [];
+                app.currentRatio = 0;
             }
         },
         updated() {

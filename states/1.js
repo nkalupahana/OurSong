@@ -44,7 +44,7 @@ function ingestVideoInput(event) {
             for (let stream of info.streams) {
                 if (stream.codec_type == "video") {
                     console.log(stream);
-                    return {"path": file.path, "frames": stream.nb_frames, "width": stream.width, "height": stream.height, "hash": SHA1(file.path).toString(UTF8), "gender": "", "duration": Number(stream.duration), sync: {}};
+                    return {"path": file.path, "frames": stream.nb_frames, "width": stream.width, "height": stream.height, "hash": SHA1(file.path).toString(UTF8), "gender": "", "duration": Number(stream.duration), sync: {}, layouts: {}};
                 }
             }
         }).then(videoData => {
