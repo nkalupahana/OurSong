@@ -35,7 +35,7 @@ function toggleLock() {
 }
 
 function nextUser() {
-    if (!document.getElementById("mainAudioPlay").paused) {
+    if (app.stage == 3 && !document.getElementById("mainAudioPlay").paused) {
         playSyncedTracks();
     }
 
@@ -47,7 +47,7 @@ function nextUser() {
 }
 
 function prevUser() {
-    if (!document.getElementById("mainAudioPlay").paused) {
+    if (app.stage == 3 && !document.getElementById("mainAudioPlay").paused) {
         playSyncedTracks();
     }
     

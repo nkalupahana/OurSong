@@ -204,6 +204,15 @@
                         <h1 class="h2">Time to window faces!</h1>
                         <p>Every layout you selected in the last step has different video window sizes. Move and resize these windows to what you'd like them to look like in the final video.</p>
                         <facewindow :ratio="currentRatio" :vid="currentVideo"></facewindow>
+                        <br>
+                        <select style="width: 60%;" v-model="currentRatio" class="form-select" aria-label="Ratio">
+                            <option v-for="(ratio, i) in windowRatios()" :value="i">Ratio: {{ ratio }} ({{ videosRatioed(ratio) }} / {{ videos.length }})</option>
+                        </select>
+                        <br>
+                        <button onclick="prevUser()" type="button" class="btn btn-primary">Prev Video</button>
+                        <button onclick="nextUser()" type="button" class="btn btn-primary">Next Video</button>
+                        <br><br>
+                        <button onclick="nextState()" :class="{ disabled: !stepFiveComplete(), 'btn-secondary': !stepFiveComplete(), 'btn-success': stepFiveComplete() }" type="button" class="btn">{{ stepFiveComplete() ? "Next Step!" : "Position All to Continue" }}</button>
                     </center>
                 </div>
                 <div v-else>

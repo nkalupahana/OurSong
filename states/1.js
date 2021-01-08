@@ -12,7 +12,8 @@ function videoInput() {
 
 function deleteVideo(index) {
     if (confirm("Are you sure you want to delete this video?")) {
-        app.videos.splice(index, 1);
+        let file = app.videos.splice(index, 1)[0];
+        fs.unlinkSync(path.join(packageLocation, `${file.hash}.${file.ext}`));
     }
 }
 
@@ -104,9 +105,12 @@ function ingestVideoInput(event) {
                         videoData.waveform.max.push(waveform.channel(0).max_sample(i));
                         videoData.waveform.min.push(waveform.channel(0).min_sample(i));
                     }
-
-                    app.processing = _.without(app.processing, file.path);
+                    const exarr = file.path.split(".");
+                    videoData.ext = exarr[exarr.length - 1];
                     app.videos.push(videoData);
+                    
+                    fs.copyFileSync(file.path, path.join(packageLocation, `${videoData.hash}.${videoData.ext}`));
+                    app.processing = _.without(app.processing, file.path);
                 });            
         });
     }

@@ -20,21 +20,34 @@ function prepareStage(obj, divisor) {
     const heightLimit = obj.stage.height();
     const ratio = app.windowRatios()[obj.ratio];
 
-    let width = app.resolution.width * ratio;
-    let height = app.resolution.height;
+    let width;
+    let height;
+    let x = 0;
+    let y = 0;
 
-    while (((width / divisor) > widthLimit) || ((height / divisor) > heightLimit)) {
-        divisor += 0.1;
+    if (!app.videos[app.currentVideo].layouts[ratio]) {
+        width = app.resolution.width * (ratio > 1 ? ratio : 1);
+        height = app.resolution.height / (ratio < 1 ? ratio : 1);
+    
+        while (((width / divisor) > widthLimit) || ((height / divisor) > heightLimit)) {
+            divisor += 0.1;
+        }
+
+        width = width / divisor;
+        height = height / divisor;
+    } else {
+        const tobj = app.videos[app.currentVideo].layouts[ratio];
+        width = tobj.width;
+        height = tobj.height;
+        x = tobj.x;
+        y = tobj.y;
     }
 
-    width = width / divisor;
-    height = height / divisor;
-
     let frame = new Konva.Rect({
-        x: 0,
-        y: 0,
-        width: width,
-        height: height,
+        x,
+        y,
+        width,
+        height,
         stroke: 'black',
         strokeWidth: 4,
         draggable: true,
@@ -49,6 +62,11 @@ function prepareStage(obj, divisor) {
             return {x,y};
         }
     });
+
+    frame.on("dragend", e => {
+        syncWindowToVue(frame);
+    });
+
     layer.add(frame);
 
     // create new transformer
@@ -66,9 +84,14 @@ function prepareStage(obj, divisor) {
             return newBox;
         }
     });
+
+    tr.on("transformend", () => {
+        syncWindowToVue(frame);
+    });
+
     layer.add(tr);
     layer.draw();
-} 
+}
 
 function addImage(obj, divisor) {
     let layer = new Konva.Layer();
@@ -102,8 +125,19 @@ Vue.component('facewindow', {
     },
     updated() {
         const divisor = getDivisor(this);
-        this.stage.clear();
+        this.stage.destroyChildren();
         addImage(this, divisor);
         prepareStage(this, divisor);
     }
 });
+
+function syncWindowToVue(frame) {
+    app.videos[app.currentVideo].layouts[app.windowRatios()[app.currentRatio]] = {
+        x: frame.attrs.x,
+        y: frame.attrs.y,
+        width: frame.attrs.width * frame.attrs.scaleX,
+        height: frame.attrs.height * frame.attrs.scaleY
+    };
+
+    app.$forceUpdate();
+}

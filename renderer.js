@@ -80,6 +80,27 @@ window.addEventListener('DOMContentLoaded', () => {
                 }
 
                 return _.uniq(ret);
+            },
+            videosRatioed: ratio => {
+                let ret = 0;
+                for (let video of app.videos) {
+                    if (video.layouts[ratio]) {
+                        ++ret;
+                    }
+                }
+
+                return ret;
+            },
+            stepFiveComplete: () => {
+                for (let video of app.videos) {
+                    for (let ratio of app.windowRatios()) {
+                        if (!video.layouts[ratio]) {
+                            return false;
+                        }
+                    }
+                }
+
+                return true;
             }
         },
         watch: {
