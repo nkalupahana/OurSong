@@ -1,6 +1,6 @@
 Vue.component('layout', {
     props: ["layout", "layouts", "width", "height", "timerange", "skey"],
-    template: `<canvas :skey="skey" :class="{ blueBorder:  (layouts[timerange] == skey) }" :width="width" :height="height" ref="canvas"></canvas>`,
+    template: `<canvas :skey="skey" :class="{ blueBorder:  (layouts[timerange] && (layouts[timerange].name == skey)) }" :width="width" :height="height" ref="canvas"></canvas>`,
     mounted () {
         const canvas = this.$refs.canvas;
         const ctx = canvas.getContext("2d");

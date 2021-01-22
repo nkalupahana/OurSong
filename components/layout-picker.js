@@ -19,7 +19,7 @@ Vue.component('layout-picker', {
     mounted () {
         for (let el of this.$refs.main.querySelectorAll("canvas")) {
             el.addEventListener("click", () => {
-                Vue.set(app.layouts, this.timerange, el.getAttribute("skey"));
+                Vue.set(app.layouts, this.timerange, {"name": el.getAttribute("skey")});
             });
         }
     }

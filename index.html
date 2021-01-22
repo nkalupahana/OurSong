@@ -215,6 +215,13 @@
                         <button onclick="nextState()" :class="{ disabled: !stepFiveComplete(), 'btn-secondary': !stepFiveComplete(), 'btn-success': stepFiveComplete() }" type="button" class="btn">{{ stepFiveComplete() ? "Next Step!" : "Position All to Continue" }}</button>
                     </center>
                 </div>
+                <div v-else-if="state == 6">
+                    <autogenerate-layouts></autogenerate-layouts>
+                    <button onclick="nextState()" type="button" class="btn btn-success">Next Step!</button>
+                </div>
+                <div v-else-if="state == 7">
+                    <export-video></export-video>
+                </div>
                 <div v-else>
                     <p>other state</p>
                 </div>
@@ -261,6 +268,8 @@
     <script src="./components/layout-picker.js"></script>
     <script src="./components/layout.js"></script>
     <script src="./components/facewindow.js"></script>
+    <script src="./components/autogenerate-layouts.js"></script>
+    <script src="./components/export-video.js"></script>
 </body>
 
 </html>

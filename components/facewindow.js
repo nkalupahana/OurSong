@@ -37,10 +37,10 @@ function prepareStage(obj, divisor) {
         height = height / divisor;
     } else {
         const tobj = app.videos[app.currentVideo].layouts[ratio];
-        width = tobj.width;
-        height = tobj.height;
-        x = tobj.x;
-        y = tobj.y;
+        width = tobj.width * widthLimit;
+        height = tobj.height * heightLimit;
+        x = tobj.x * widthLimit;
+        y = tobj.y * heightLimit;
     }
 
     let frame = new Konva.Rect({
@@ -64,7 +64,7 @@ function prepareStage(obj, divisor) {
     });
 
     frame.on("dragend", e => {
-        syncWindowToVue(frame);
+        syncWindowToVue(frame, obj.stage);
     });
 
     layer.add(frame);
@@ -86,7 +86,7 @@ function prepareStage(obj, divisor) {
     });
 
     tr.on("transformend", () => {
-        syncWindowToVue(frame);
+        syncWindowToVue(frame, obj.stage);
     });
 
     layer.add(tr);
@@ -125,18 +125,23 @@ Vue.component('facewindow', {
     },
     updated() {
         const divisor = getDivisor(this);
-        this.stage.destroyChildren();
+        this.stage.destroy();
+        this.stage = new Konva.Stage({
+            container: this.$refs.container,
+            width: app.videos[this.vid].width / divisor,
+            height: app.videos[this.vid].height / divisor,
+        });
         addImage(this, divisor);
         prepareStage(this, divisor);
     }
 });
 
-function syncWindowToVue(frame) {
+function syncWindowToVue(frame, stage) {
     app.videos[app.currentVideo].layouts[app.windowRatios()[app.currentRatio]] = {
-        x: frame.attrs.x,
-        y: frame.attrs.y,
-        width: frame.attrs.width * frame.attrs.scaleX,
-        height: frame.attrs.height * frame.attrs.scaleY
+        x: frame.attrs.x / stage.width(),
+        y: frame.attrs.y / stage.height(),
+        width: (frame.attrs.width * frame.attrs.scaleX) / stage.width(),
+        height: (frame.attrs.height * frame.attrs.scaleY) / stage.height()
     };
 
     app.$forceUpdate();

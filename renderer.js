@@ -1,10 +1,17 @@
+// GLOBALS
 let app;
 let packageLocation = "";
+
+// PACKAGES
 const path = require('path');
 const fs = require("fs");
 const { dialog } = require('electron').remote;
 const WaveformData = require('waveform-data');
 const yaml = require('js-yaml');
+const SHA1 = require("crypto-js/sha1");
+const UTF8 = require("crypto-js").enc.UTF8;
+const ffmpegPath = require('ffmpeg-static');
+const {exec} = require('child_process');
 
 window.addEventListener('DOMContentLoaded', () => {
     const layouts = yaml.load(fs.readFileSync('./layouts.yaml', 'utf8'));
@@ -73,7 +80,7 @@ window.addEventListener('DOMContentLoaded', () => {
             windowRatios: () => {
                 let ret = [];
                 for (let key in app.layouts) {
-                    for (let lstr of app.constLayouts[app.layouts[key]]) {
+                    for (let lstr of app.constLayouts[app.layouts[key].name]) {
                         lstr = lstr.split(" ");
                         ret.push(Number(lstr[2]) / Number(lstr[3]));
                     }

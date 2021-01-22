@@ -1,10 +1,5 @@
 const ffprobe = require('ffprobe');
 const ffprobeStatic = require('ffprobe-static');
-const ffmpegPath = require('ffmpeg-static');
-const SHA1 = require("crypto-js/sha1");
-const UTF8 = require("crypto-js").enc.UTF8;
-
-const {exec} = require('child_process');
 
 function videoInput() {
     document.getElementById('videoInput').click();

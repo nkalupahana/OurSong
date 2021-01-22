@@ -53,7 +53,7 @@ function calculateWaveformTime(canvas, secondsPerPixel) {
     return (-canvas.getContext("2d").getTransform().e) * secondsPerPixel * PIXEL_DIVISOR;
 }
 
-function renderWaveform(obj) {
+function renderWaveform(obj, onMount) {
     const canvas = obj.$refs.canvas;
     const ctx = canvas.getContext("2d");
     const waveform = (obj.vid == -1 ? app.audio.waveform : app.videos[obj.vid].waveform);
@@ -99,9 +99,9 @@ Vue.component('waveform', {
     props: ["vid", "update"],
     template: `<canvas ref="canvas" :class="'waveform'+vid+update" :id="'waveform' + vid" style="height: 125px; width: 80%;"></canvas>`,
     mounted () {
-        renderWaveform(this);
+        renderWaveform(this, true);
     },
     updated() {
-        renderWaveform(this);
+        renderWaveform(this, false);
     }
 });
