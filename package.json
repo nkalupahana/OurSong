@@ -17,7 +17,7 @@
   "author": "Nisala Kalupahana",
   "license": "Do No Harm",
   "devDependencies": {
-    "electron": "^11.1.0"
+    "electron": "^11.5.0"
   },
   "dependencies": {
     "crypto-js": "^4.0.0",
